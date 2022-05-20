@@ -17,7 +17,7 @@ namespace DATA.Models
         [Display(Name = "Category")]
         public string CategoryName { get; set; } = null!;
         [StringLength(500)]
-        public string? CategoryDescription { get; set; }
+        public string? CategoryDescript{ get; set; }
 
     }
     #endregion
@@ -26,36 +26,30 @@ namespace DATA.Models
 
     public class OrderMetadata
     {
-        //nothing needed-this is a PK
         public int OrderId { get; set; }
 
-        //no metadata needed for FKs - as they are represented in a View by a dropdown list
-        public string UserId { get; set; } = null!;
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:d}")]
-        [Display(Name = "Oder Date")]
-        [Required]
-        public DateTime OrderDate { get; set; }
 
-        [StringLength(100)]
-        [Display(Name = "Ship to")]
-        [Required]
-
-        public string ShipToName { get; set; } = null!;
+        public int UserId { get; set; }
         [StringLength(50)]
-        [Display(Name = "City")]
-        [Required]
-        public string ShipCity { get; set; } = null!;
-
-        [StringLength(2)]
-        [Display(Name = "State")]
-        [Required]
-        public string? ShipState { get; set; }
-
-        [StringLength(5)]
+        public string Address { get; set; } = null!;
+       [StringLength(50)]
+        public string City { get; set; } = null!;
+        [StringLength (50)]
+        public string State { get; set; } = null!;
+        [StringLength(50)]
+        public string Country { get; set; } = null!;
+        [StringLength(10)]
         [Display(Name = "Zip")]
         [DataType(DataType.PostalCode)]
         [Required]
-        public string ShipZip { get; set; } = null!;
+        public string Zip { get; set; } = null!;
+
+        [DisplayFormat(ApplyFormatInEditMode = false, DataFormatString = "{0:c}")]
+        [Display(Name = "Price")]
+        [Range(0, double.MaxValue)]
+        [Required]
+        public decimal Price { get; set; }
+        public int Quantity { get; set; }
     }
     #endregion
     #region Product
@@ -63,37 +57,29 @@ namespace DATA.Models
     {
 
         public int ProductId { get; set; }
-
-
         [Required(ErrorMessage = "* Product Name is required")]
         [StringLength(200)]
         [Display(Name = "Product")]
-        public string ProductName { get; set; } = null!;
-
+        public string Pname { get; set; } = null!;
         [DisplayFormat(ApplyFormatInEditMode = false, DataFormatString = "{0:c}")]
         [Display(Name = "Price")]
         [Range(0, double.MaxValue)]
         [Required]
-
-        public decimal ProductPrice { get; set; }
+        public decimal Pprice { get; set; }
 
         [StringLength(500)]
-        public string? ProductDescription { get; set; }
-
+        public string? Pdescript { get; set; }
         [Required]
         [Range(0, short.MaxValue)]
         [Display(Name = "In Stock")]
-        public short UnitsInStock { get; set; }
-        [Required]
-        [Range(0, short.MaxValue)]
-        [Display(Name = "On Order")]
-        public short UnitsOnOrder { get; set; }
+        public short InStock { get; set; }
 
-        public bool IsDiscontinued { get; set; }
+        public short OutStock { get; set; }
         public int CategoryId { get; set; }
-        public int? SupplierId { get; set; }
-        public string? ProductImage { get; set; }
-
+        public int SupplierId { get; set; }
+        [StringLength(75)]
+        [Display(Name = "Image")]
+        public string? Img { get; set; }
 
     }
     #endregion
@@ -101,26 +87,22 @@ namespace DATA.Models
     #region Supplier
     public class SupplierMetadata
     {
-        public int SupplierId { get; set; }
-
+        public int SupId { get; set; }
         [Required(ErrorMessage = "* Supplier Name is required")]
         [StringLength(100)]
         [Display(Name = "Supplier")]
-        public string SupplierName { get; set; } = null!;
-        [StringLength(150)]
+        public string SupName { get; set; } = null!;
 
-        public string Address { get; set; } = null!;
-        [StringLength(100)]
-        public string City { get; set; } = null!;
-        [StringLength(2)]
-        public string? State { get; set; }
+        [StringLength(50)]
+        public string? Address { get; set; }
+        [StringLength(10)]
 
+        public string? City { get; set; }
         [StringLength(5)]
-        [Display(Name = "Zip")]
-        [DataType(DataType.PostalCode)]
-        [Required]
-        public string? Zip { get; set; }
-        [StringLength(24)]
+        public string? State { get; set; }
+        [StringLength(50)]
+        public string Country { get; set; } = null!;
+        [StringLength(10)]
         public string? Phone { get; set; }
     }
     #endregion
@@ -128,28 +110,27 @@ namespace DATA.Models
     #region UserDetail
     public class UserMetadata
     {
-        public string UserId { get; set; } = null!;
-        [Required(ErrorMessage = "*  Name is required")]
-        [StringLength(100)]
-        [Display(Name = "FirstName")]
+        public int UserId { get; set; }
+        public int? EmployeeId { get; set; }
+       [StringLength(50)]
+        public string? UserType { get; set; }
+        [StringLength(50)]
         public string FirstName { get; set; } = null!;
-        [Required(ErrorMessage = "*  Name is required")]
-        [StringLength(100)]
-        [Display(Name = "LastName")]
+        [StringLength(50)]
         public string LastName { get; set; } = null!;
-        [StringLength(150)]
-        public string? Address { get; set; }
-        [StringLength(100)]
-        public string? City { get; set; }
+        [StringLength(50)]
+        public string Adress { get; set; } = null!;
+        [StringLength(50)]
+        public string City { get; set; } = null!;
         [StringLength(2)]
-        public string? State { get; set; }
-        [StringLength(5)]
-        [Display(Name = "Zip")]
-        [DataType(DataType.PostalCode)]
-        [Required]
+        public string State { get; set; } = null!;
+        [StringLength(50)]
+        public string Country { get; set; } = null!; 
+        [StringLength(10)]
         public string? Zip { get; set; }
-        [StringLength(24)]
+        [StringLength(10)]
         public string? Phone { get; set; }
+
 
     }
 

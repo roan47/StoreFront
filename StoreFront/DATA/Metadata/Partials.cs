@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Http;
+
 
 
 namespace DATA.Models
@@ -26,7 +29,11 @@ namespace DATA.Models
     #region Products
     [ModelMetadataType(typeof(ProductMetadata))]
 
-    public partial class Product { }
+    public partial class Product
+    {
+        [NotMapped]
+        public IFormFile? Image { get; set; }
+    }
     #endregion
 
     #region Supplier
