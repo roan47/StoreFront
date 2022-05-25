@@ -37,9 +37,36 @@ namespace GadgetStore.UI.MVC.Controllers
         }
 
         public IActionResult Index()
-        {
-            ViewBag.Cart = HttpContext.Session.GetString("cart");
-            return View();
+        {  //retreive the content from the session shopping cart (stored as JSON) and convert those to C# via Newtonsoft.Json
+            //After converting to C#, we can pass the collection of cart contents back to the strongly-typed view to display
+
+            //retrieve cart contents
+            var sessionCart = HttpContext.Session.GetString("cart");
+
+            //create the shell for the local (C# version) pf the cart
+            Dictionary<int, CartItemViewModel> shoppingCart = null;
+
+            //check to see if the session cart equals null
+            if (sessionCart == null || sessionCart.Count() == 0)
+            {
+                //user either hasnt put anything in the cart, or they have removed all items
+                //set shoppingCart to an empty object
+                shoppingCart = new Dictionary<int, CartItemViewModel>();
+
+                ViewBag.Message = "There are no items in your cart";
+            }
+            else
+            {
+
+                ViewBag.Message = null;
+                //deserialize the cart contents from JSON to C#
+
+                shoppingCart = JsonConvert.DeserializeObject<Dictionary<int, CartItemViewModel>>(sessionCart);
+
+            }
+
+
+            return View(shoppingCart);
         }
 
         public IActionResult AddToCart(int id)
@@ -105,5 +132,37 @@ namespace GadgetStore.UI.MVC.Controllers
 
             return RedirectToAction("Index");
         }
+
+
+        public IActionResult RemoveFromCart(int id)
+        {
+            //retrieve the cart from session
+            var sessionCart = HttpContext.Session.GetString("cart");
+
+            //convert JSON cart to C#
+            Dictionary<int, CartItemViewModel> shoppingCart = JsonConvert.DeserializeObject<Dictionary<int, CartItemViewModel>>(sessionCart);
+
+            ////remove cart item
+            shoppingCart.Remove(id);
+
+            //if there are no remaining items in the cart, remove it from session
+            if (shoppingCart.Count == 0)
+            {
+                HttpContext.Session.Remove("cart");
+
+            }
+            //otherwise, update the session variable with our local cart contains
+            else
+            {
+                string jsonCart = JsonConvert.SerializeObject(shoppingCart);
+                HttpContext.Session.SetString("cart", jsonCart);
+
+            }
+            return RedirectToAction("Index");
+
+        }
+
+
+
+        }
     }
-}
