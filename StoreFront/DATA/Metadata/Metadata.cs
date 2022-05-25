@@ -110,7 +110,7 @@ namespace DATA.Models
     #region UserDetail
     public class UserMetadata
     {
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         public int? EmployeeId { get; set; }
        [StringLength(50)]
         public string? UserType { get; set; }

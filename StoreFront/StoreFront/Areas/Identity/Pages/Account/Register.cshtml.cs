@@ -18,7 +18,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
-
+using DATA.Models;
 namespace StoreFront.Areas.Identity.Pages.Account
 {
     public class RegisterModel : PageModel
@@ -79,6 +79,7 @@ namespace StoreFront.Areas.Identity.Pages.Account
             [Display(Name = "Email")]
             public string Email { get; set; }
 
+
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
@@ -97,6 +98,39 @@ namespace StoreFront.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+
+
+            [Required]
+            [StringLength(50, ErrorMessage = "Maximum 50 characters")]
+            public string FirstName { get; set; } = null!;
+            [Required]
+            [StringLength(50, ErrorMessage = "Maximum 50 characters")]
+
+            public string LastName { get; set; } = null!;
+            [StringLength(150, ErrorMessage = "Maximum 150 characters")]
+
+            public string Adress { get; set; } = null!;
+
+            [StringLength(50, ErrorMessage = "Maximum 50 characters")]
+            public string City { get; set; } = null!;
+
+            [StringLength(2, ErrorMessage = "Maximum 2 characters")]
+            public string? State { get; set; }
+
+           
+
+
+            [StringLength(50, ErrorMessage = "Maximum 50 characters")]
+
+            public string Country { get; set; } = null!;
+            [StringLength(5, ErrorMessage = "Maximum 5 characters")]
+
+            public string? Zip { get; set; }
+            [StringLength(24, ErrorMessage = "Maximum 24 characters")]
+
+            public string? Phone { get; set; }
+
+
         }
 
 
@@ -123,6 +157,24 @@ namespace StoreFront.Areas.Identity.Pages.Account
                     _logger.LogInformation("User created a new account with password.");
 
                     var userId = await _userManager.GetUserIdAsync(user);
+
+                    StoreFrontContext _context = new StoreFrontContext();
+                    User userdetail = new User()
+                    {
+                        UserId = userId,
+                        FirstName = Input.FirstName,
+                        LastName = Input.LastName,
+                        Adress = Input.Adress,
+                        City = Input.City,
+                        State = Input.State,
+                        Country = Input.Country,
+                        Zip = Input.Zip,
+                        Phone = Input.Phone,
+                    };
+
+                    _context.Users.Add(userdetail);
+                    _context.SaveChanges();
+
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     var callbackUrl = Url.Page(

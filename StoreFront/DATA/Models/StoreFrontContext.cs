@@ -167,7 +167,9 @@ namespace DATA.Models
                     .IsUnicode(false)
                     .HasColumnName("state");
 
-                entity.Property(e => e.UserId).HasColumnName("UserID");
+                entity.Property(e => e.UserId)
+                    .HasMaxLength(128)
+                    .HasColumnName("UserID");
 
                 entity.Property(e => e.Zip)
                     .HasMaxLength(10)
@@ -275,7 +277,7 @@ namespace DATA.Models
                 entity.ToTable("User");
 
                 entity.Property(e => e.UserId)
-                    .ValueGeneratedNever()
+                    .HasMaxLength(128)
                     .HasColumnName("UserID");
 
                 entity.Property(e => e.Adress)

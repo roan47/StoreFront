@@ -42,10 +42,10 @@ namespace DATA.Models
 
     #endregion
 
-    #region UserDetails
+    #region User
     [ModelMetadataType(typeof(UserMetadata))]
 
-    public partial class UserDetails { }
+    public partial class User { }
     #endregion
 
 

@@ -3,12 +3,46 @@
 @{
     ViewData["Title"] = "Index";
 }
+    <div class="page-heading" id="top">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="inner-content">
+                        <h2>Check Our Products</h2>
+                        <span>Awesome &amp; Creative HTML CSS layout by TemplateMo</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 <h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<section class="product_section layout_padding">
+    <div class="container">
+        <div class="heading_container heading_center">
+            <h2>
+                Skate <span>Shop</span>
+            </h2>
+
+            <p align="center">
+                @if (User.IsInRole("Admin"))
+                {
+                    //The pipe delimiters (|) that were outside of the <a> tags were causing intellisense to
+                    //assume we were switching BACK to C# mode.
+                    //To make sure intellisense renders these as text and NOT c#, we can wrap everything in a <span>
+                    <span>
+                        <a asp-action="Create">Add New Item</a> |
+                        <a asp-action="Discontinued">Discontinued Items</a> |
+                    </span>
+                }
+                <a asp-action="TiledProducts">Tile View</a>
+            </p>
+
+        </div>
+    
+
+
 <table class="table">
     <thead>
         <tr>
@@ -58,7 +92,8 @@
                 @Html.DisplayFor(modelItem => item.OutStock)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Img)
+                @*@Html.DisplayFor(modelItem => item.Img)*@
+                <img src="~/assets/images/@item.Img" class="img-fluid" alt="@item.Pdescript" />
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Category.CategoryName)
@@ -73,5 +108,7 @@
             </td>
         </tr>
 }
-    </tbody>
-</table>
+            </tbody>
+        </table>
+       </div>
+ </section>
