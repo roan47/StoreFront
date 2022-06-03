@@ -78,7 +78,12 @@
                             </td>
 
                             <td>
-                                @item.Value.Qty
+                                <form asp-action="UpdateCart"> 
+                                    <input type="hidden" name="productId" value="@item.Key" />
+                                    <input type="text" name="qty" value="@item.Value.Qty" class="form-control d-inline" style="max-width: 100px;"/>
+                                    <input type="submit" value="Update Cart" class="btn btn-primary"/>
+
+                                </form>
                             </td>
                             <td>
                                 @item.Value.Product.Pname
@@ -115,7 +120,24 @@
            <p>
                Your total before tax and shipping is @cartTotal.
            </p>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <p>
+                        <a asp-action="SubmitOrder" class="btn btn-primary">
+                            Submit Order 
+                        </a>
+                    </p>
+
+                }
+                else
+                {
+                    <p>
+                        To place this order you must be logged in.
+                    </p>
+                    <button disabled="disabled" class="btn btn-primary">Submit Order</button>
+                }
             </div>
+     
         }
 
 

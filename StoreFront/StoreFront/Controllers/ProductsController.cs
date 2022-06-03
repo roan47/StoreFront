@@ -9,6 +9,7 @@ using DATA.Models;
 using StoreFront.Utilities;
 using System.Drawing;
 using Microsoft.AspNetCore.Authorization;
+using X.PagedList;
 
 namespace StoreFront.Controllers
 {
@@ -34,11 +35,49 @@ namespace StoreFront.Controllers
 
         //Created a separate action that returns the same results as Index, but in the View
         //we will use a tiled layout instead of a table
-        public async Task<IActionResult> TiledProducts()
+        public async Task<IActionResult> TiledProducts(string searchTerm, int categoryId = 0, int page = 1)
         {
-            var products = _context.Products
-                .Include(p => p.Category).Include(p => p.Supplier).Include(p => p.OrderDetails);
-            return View(await products.ToListAsync());
+
+            int pageSize = 6;
+            // Category DDL - Step 3
+            //Create a ViewData objects to send a list of categories to the view
+            //Note: we copied this from the existing functionality in Products.Create()
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName");
+            ViewBag.Category = 0;
+
+
+
+            var products = _context.Products.Include(p => p.Category).Include(p => p.Supplier).Include(p => p.OrderDetails).ToList();
+
+            #region Optional Category Filter
+            if (categoryId != 0)
+            {
+                products = products.Where(p => p.CategoryId == categoryId).ToList();
+                ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryName", categoryId);
+            }
+
+            #endregion
+            //filter - 2.b
+            #region Optional Search Filter
+            if (!String.IsNullOrEmpty(searchTerm))
+            {
+                products = products.Where(p => p.Pname.ToLower().Contains(searchTerm.ToLower())
+                || p.Supplier.SupName.ToLower().Contains(searchTerm.ToLower())
+                || p.Pdescript.ToLower().Contains(searchTerm.ToLower())
+                || p.Category.CategoryName.ToLower().Contains(searchTerm.ToLower()))
+                .ToList();
+                ViewBag.NbrResults = products.Count;
+                ViewBag.SearchTerm = searchTerm;
+            }
+            else
+            {
+                ViewBag.NbrResults = null;
+
+                ViewBag.SearchTerm = null;
+            }
+            #endregion
+
+            return View(products.ToPagedList(page, pageSize));
         }
         // GET: Products/Details/5
         public async Task<IActionResult> Details(int? id)

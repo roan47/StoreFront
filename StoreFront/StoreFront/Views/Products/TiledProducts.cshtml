@@ -1,4 +1,7 @@
-﻿@model IEnumerable<DATA.Models.Product>
+﻿@*@model IEnumerable<DATA.Models.Product>*@
+@model IPagedList<DATA.Models.Product>
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
 
 @{
     ViewData["Title"] = "Shop";
@@ -10,7 +13,7 @@
                 <div class="col-lg-12">
                     <div class="inner-content">
                         <h2>Check Our Products</h2>
-                        <span>Awesome &amp; Creative HTML CSS layout by TemplateMo</span>
+                        <span></span>
                     </div>
                 </div>
             </div>
@@ -37,11 +40,64 @@
             <a asp-action="Index">Table View</a>
         </p>
 
-                    </div>
+                   
                 </div>
             </div>
         </div>
-        <div class="container">
+        
+        <div class="row">
+
+           <div class="offset-3 col-sm-6">
+                <form asp-action="TiledProducts" method= "get">
+                    @*method="get" -> appends the key/value pairs from a form onto the queryt string in our URL
+                        ? in the URL indicates the beginning of a query string
+                        -everything after the ? is  akey/value pair
+                        ?searchTerm=WhateverISearchedFor
+                        -multiple key/value pairs are separated with an &
+                        ?searchTerm=whatevs&category=tool
+                        These keys/value are passed to the action as arguments for the action's parameters.
+                         public IActionResult TiledProducts(string searchTerm, string category)
+                    *@
+
+
+                    @*
+                        Category DDL - Step 4
+                        - add the <select> element
+
+                    *@
+                    <label for="categoryId" class="control-label d-block text-center">Filter by Category</label>
+
+                    <select name="categoryId" class="form-control text-center mb-3" asp-items="ViewBag.CategoryId">
+                        <option value=0>[Choose a Category]</option>
+                    </select>
+
+                    <input name="SearchTerm" class="form-control"/>
+
+                
+
+                  
+                      
+                                
+                    <div class="section-heading">
+                  
+
+                    <input type="submit" value="Apply Filters" class="main-text-button  col-sm-6"  />
+                    </div>
+                      
+                </form>
+
+                @if(ViewBag.NbrResults != null)
+                {
+                    <p class="mt-5 p-2 alert-warning text-center">
+                        Showing @ViewBag.NbrResults result@(ViewBag.NbrResults>1 ? "s" : "") for '@ViewBag.SearchTerm'....
+
+                    </p>
+                }
+            </div>
+            </div>
+
+            <div class="container">
+
             <div class="row">
                  @foreach (var item in Model)
                       {
@@ -68,8 +124,15 @@
                 }
 
               </div>
-       
-        
+
+
+         <div class="row mt-5">
+            <div class="offset-5 col-sm-6">
+                Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+                @Html.PagedListPager(Model, page => Url.Action("TiledProducts", new {page, searchTerm = ViewBag.SearchTerm, categoryId = ViewBag.Category}))
+            </div>
+        </div>
+    
     </div>
 </section>
 

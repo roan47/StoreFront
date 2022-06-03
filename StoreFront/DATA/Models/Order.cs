@@ -5,6 +5,11 @@ namespace DATA.Models
 {
     public partial class Order
     {
+        public Order()
+        {
+            OrderDetails = new HashSet<OrderDetail>();
+        }
+
         public int OrderId { get; set; }
         public string UserId { get; set; } = null!;
         public string Address { get; set; } = null!;
@@ -15,7 +20,7 @@ namespace DATA.Models
         public decimal Price { get; set; }
         public int Quantity { get; set; }
 
-        public virtual OrderDetail OrderNavigation { get; set; } = null!;
         public virtual User User { get; set; } = null!;
+        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
     }
 }

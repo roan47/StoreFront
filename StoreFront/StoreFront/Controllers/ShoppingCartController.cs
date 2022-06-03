@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;//added to access UserManager
 using StoreFront.Models;//Added to access CartItemViewModel
 using Newtonsoft.Json;//added to manage shopping cart
 
-namespace GadgetStore.UI.MVC.Controllers
+namespace StoreFront.Controllers
 {
     public class ShoppingCartController : Controller
     {
@@ -163,6 +163,111 @@ namespace GadgetStore.UI.MVC.Controllers
         }
 
 
+        public IActionResult UpdateCart(int productId, int qty)
+        {
+            var sessionCart = HttpContext.Session.GetString("cart");
+
+            Dictionary<int, CartItemViewModel> shoppingCart = JsonConvert.DeserializeObject<Dictionary<int, CartItemViewModel>>(sessionCart);
+
+            //update the qty for our specific dictionary key
+            shoppingCart[productId].Qty = qty;
+
+            //update session
+            string jsonCart = JsonConvert.SerializeObject(shoppingCart);
+
+            HttpContext.Session.SetString("cart", jsonCart);
+
+            return RedirectToAction("Index");
+
+
 
         }
+
+        public async Task<IActionResult> SubmitOrder()
+        {
+
+            #region planing out order submission
+
+            //Big picture plan
+            //Create order object -> then save to the 
+            //-ORder date
+            //-UserId
+            //- ShipCity,ShipState,ShipZip --> this info needs to be pulled from the USerDetails record
+            // Asdd the record to _context
+            //sAVE Db changes
+
+
+            //Create the OrderPRoducts object for each item in the cart
+            //- ProductId -> availble from cart
+
+            //- OrderId ->
+            // -QTY
+            // - ProductPrice
+
+            #endregion
+
+            //Retrieve current user's Id
+            //This is a mechanism provided by identity ton retrieve the Usser ID in the current HttpContext
+            //If you need to retrieve the ID in ANY Controller you can use this
+
+            string? userId = (await _userManager.GetUserAsync(HttpContext.User))?.Id;
+
+            //Retrieve the UserDetails record 
+            User ud = _context.Users.Find(userId);
+
+            //Create the Order object and assign values
+            Order o = new Order()
+            {
+                UserId = userId,
+                Address = ud.Adress,
+
+                
+                City = ud.City,
+
+                State = ud.State,
+                Country = ud.Country,
+                Zip = ud.Zip,
+               
+                
+                
+               
+
+
+            };
+
+
+            _context.Orders.Add(o);
+
+
+            //Retrieve the session cart
+            var sessionCart = HttpContext.Session.GetString("cart");
+            Dictionary<int, CartItemViewModel> shoppingCart = JsonConvert.DeserializeObject<Dictionary<int, CartItemViewModel>>(sessionCart);
+
+            //Creater OrderProduct object for each record in the cart
+            foreach (var item in shoppingCart)
+            {
+                OrderDetail op = new OrderDetail()
+                {
+                    OrderId = o.OrderId,
+                    ProductId = item.Key,
+                    Pprice = item.Value.Product.Pprice,
+                    Quantity = (short)item.Value.Qty
+                };
+
+                o.OrderDetails.Add(op);
+
+            }
+
+            _context.SaveChanges();
+            return RedirectToAction("Index", "Orders");
+
+
+
+
+        }
+
+
+
+
     }
+}

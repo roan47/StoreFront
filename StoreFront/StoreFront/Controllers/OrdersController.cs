@@ -21,7 +21,7 @@ namespace StoreFront.Controllers
         // GET: Orders
         public async Task<IActionResult> Index()
         {
-            var storeFrontContext = _context.Orders.Include(o => o.OrderNavigation).Include(o => o.User);
+            var storeFrontContext = _context.Orders.Include(o => o.User);
             return View(await storeFrontContext.ToListAsync());
         }
 
@@ -34,7 +34,6 @@ namespace StoreFront.Controllers
             }
 
             var order = await _context.Orders
-                .Include(o => o.OrderNavigation)
                 .Include(o => o.User)
                 .FirstOrDefaultAsync(m => m.OrderId == id);
             if (order == null)
@@ -48,7 +47,6 @@ namespace StoreFront.Controllers
         // GET: Orders/Create
         public IActionResult Create()
         {
-            ViewData["OrderId"] = new SelectList(_context.OrderDetails, "OrderId", "OrderId");
             ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId");
             return View();
         }
@@ -66,7 +64,6 @@ namespace StoreFront.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["OrderId"] = new SelectList(_context.OrderDetails, "OrderId", "OrderId", order.OrderId);
             ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId", order.UserId);
             return View(order);
         }
@@ -84,7 +81,6 @@ namespace StoreFront.Controllers
             {
                 return NotFound();
             }
-            ViewData["OrderId"] = new SelectList(_context.OrderDetails, "OrderId", "OrderId", order.OrderId);
             ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId", order.UserId);
             return View(order);
         }
@@ -121,7 +117,6 @@ namespace StoreFront.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["OrderId"] = new SelectList(_context.OrderDetails, "OrderId", "OrderId", order.OrderId);
             ViewData["UserId"] = new SelectList(_context.Users, "UserId", "UserId", order.UserId);
             return View(order);
         }
@@ -135,7 +130,6 @@ namespace StoreFront.Controllers
             }
 
             var order = await _context.Orders
-                .Include(o => o.OrderNavigation)
                 .Include(o => o.User)
                 .FirstOrDefaultAsync(m => m.OrderId == id);
             if (order == null)

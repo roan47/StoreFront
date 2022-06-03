@@ -11,7 +11,7 @@
     <meta name="author" content="">
     <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900&display=swap" rel="stylesheet">
 
-    <title>Hexashop Ecommerce HTML CSS Template</title>
+    <title>Sawse Shop</title>
 
 
     <!-- Additional CSS Files -->
@@ -24,6 +24,14 @@
     <link rel="stylesheet" href="~/assets/css/owl-carousel.css">
 
     <link rel="stylesheet" href="~/assets/css/lightbox.css">
+     
+    <link rel="stylesheet" href="//cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css"/>
+
+      <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+
+     <link rel="stylesheet" href="~/assets/css/PagedList.css"/>
+
+       <link rel="stylesheet" href="~/https://cdn.plyr.io/3.6.9/plyr.css" />
 <!--
 
 TemplateMo 571 Hexashop
@@ -54,21 +62,16 @@ https://templatemo.com/tm-571-hexashop
                     <nav class="main-nav">
                         <!-- ***** Logo Start ***** -->
                         <a asp-action="Index" asp-controller="Home" class="logo">
-                            <img src="~/assets/images/logo.png">
+                          
+                            <img src="~/assets/images/cooltext412147038315734.png" />
                         </a>
                         <!-- ***** Logo End ***** -->
                         <!-- ***** Menu Start ***** -->
                         <ul class="nav">
+
+                            <li><a href="@Url.Action("Index", "Home")">Home</a></li>
                        
-                           <li class="submenu">
-                                <a href="javascript:;">Pages</a>
-                                <ul>
-                                    <li><a href="about.html">About Us</a></li>
-                                    <li><a href="products.html">Products</a></li>
-                                    <li><a href="single-product.html">Single Product</a></li>
-                                    <li><a href="contact.html">Contact Us</a></li>
-                                </ul>
-                            </li>
+                          
 
                                     @if (User.IsInRole("Admin"))
                             {
@@ -93,7 +96,7 @@ https://templatemo.com/tm-571-hexashop
                                     </ul>
                                 </li>
 
-                            }
+                            }  
 
 
                             <li class="submenu">
@@ -101,6 +104,9 @@ https://templatemo.com/tm-571-hexashop
                                     Shop
                                 </a>
                             </li>
+
+                             <li><a href="@Url.Action("Contact","StronglyTypedData")">Contact</a></li>
+
 
                             @if (signInManager.IsSignedIn(User))
                             {
@@ -208,7 +214,7 @@ https://templatemo.com/tm-571-hexashop
                 <div class="col-lg-3">
                     <h4>Useful Links</h4>
                     <ul>
-                        <li><a href="#">Homepage</a></li>
+                        <li><a href="~/index.html">Homepage</a></li>
                         <li><a href="#">About Us</a></li>
                         <li><a href="#">Help</a></li>
                         <li><a href="#">Contact Us</a></li>
@@ -244,6 +250,9 @@ https://templatemo.com/tm-571-hexashop
     <!-- jQuery -->
     <script src="~/assets/js/jquery-2.1.0.min.js"></script>
 
+     <!--Data Tables-->
+     <script src="//cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"> </script>
+
     <!-- Bootstrap -->
     <script src="~/assets/js/popper.js"></script>
     <script src="~/assets/js/bootstrap.min.js"></script>
@@ -259,6 +268,21 @@ https://templatemo.com/tm-571-hexashop
     <script src="~/assets/js/slick.js"></script> 
     <script src="~/assets/js/lightbox.js"></script> 
     <script src="~/assets/js/isotope.js"></script> 
+        <script src="~/https://cdn.plyr.io/3.6.9/plyr.polyfilled.js"></script>
+
+        
+    @*
+        AJAX - Step 10 add <script> for jQuery UI 
+    *@
+    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+
+
+    @*
+        AJAX - Step 2 - add ajax js link in the layout
+        - we found this CDN by searching 'jquery ajax unobtrusive cdn' - you can just copy this <script> for use in other projects
+    *@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.min.js" integrity="sha512-DedNBWPF0hLGUPNbCYfj8qjlEnNE92Fqn7xd3Sscfu7ipy7Zu33unHdugqRD3c4Vj7/yLv+slqZhMls/4Oc7Zg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
     
     <!-- Global Init -->
     <script src="~/assets/js/custom.js"></script>

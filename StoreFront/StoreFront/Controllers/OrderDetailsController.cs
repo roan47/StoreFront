@@ -21,7 +21,7 @@ namespace StoreFront.Controllers
         // GET: OrderDetails
         public async Task<IActionResult> Index()
         {
-            var storeFrontContext = _context.OrderDetails.Include(o => o.Product);
+            var storeFrontContext = _context.OrderDetails.Include(o => o.Order).Include(o => o.Product);
             return View(await storeFrontContext.ToListAsync());
         }
 
@@ -34,8 +34,9 @@ namespace StoreFront.Controllers
             }
 
             var orderDetail = await _context.OrderDetails
+                .Include(o => o.Order)
                 .Include(o => o.Product)
-                .FirstOrDefaultAsync(m => m.OrderId == id);
+                .FirstOrDefaultAsync(m => m.OrderDetailsId == id);
             if (orderDetail == null)
             {
                 return NotFound();
@@ -47,6 +48,7 @@ namespace StoreFront.Controllers
         // GET: OrderDetails/Create
         public IActionResult Create()
         {
+            ViewData["OrderId"] = new SelectList(_context.Orders, "OrderId", "Address");
             ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "Pname");
             return View();
         }
@@ -56,7 +58,7 @@ namespace StoreFront.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("OrderId,ProductId,Quantity,Pprice")] OrderDetail orderDetail)
+        public async Task<IActionResult> Create([Bind("OrderId,ProductId,Quantity,Pprice,OrderDetailsId")] OrderDetail orderDetail)
         {
             if (ModelState.IsValid)
             {
@@ -64,6 +66,7 @@ namespace StoreFront.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["OrderId"] = new SelectList(_context.Orders, "OrderId", "Address", orderDetail.OrderId);
             ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "Pname", orderDetail.ProductId);
             return View(orderDetail);
         }
@@ -81,6 +84,7 @@ namespace StoreFront.Controllers
             {
                 return NotFound();
             }
+            ViewData["OrderId"] = new SelectList(_context.Orders, "OrderId", "Address", orderDetail.OrderId);
             ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "Pname", orderDetail.ProductId);
             return View(orderDetail);
         }
@@ -90,9 +94,9 @@ namespace StoreFront.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("OrderId,ProductId,Quantity,Pprice")] OrderDetail orderDetail)
+        public async Task<IActionResult> Edit(int id, [Bind("OrderId,ProductId,Quantity,Pprice,OrderDetailsId")] OrderDetail orderDetail)
         {
-            if (id != orderDetail.OrderId)
+            if (id != orderDetail.OrderDetailsId)
             {
                 return NotFound();
             }
@@ -106,7 +110,7 @@ namespace StoreFront.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!OrderDetailExists(orderDetail.OrderId))
+                    if (!OrderDetailExists(orderDetail.OrderDetailsId))
                     {
                         return NotFound();
                     }
@@ -117,6 +121,7 @@ namespace StoreFront.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["OrderId"] = new SelectList(_context.Orders, "OrderId", "Address", orderDetail.OrderId);
             ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "Pname", orderDetail.ProductId);
             return View(orderDetail);
         }
@@ -130,8 +135,9 @@ namespace StoreFront.Controllers
             }
 
             var orderDetail = await _context.OrderDetails
+                .Include(o => o.Order)
                 .Include(o => o.Product)
-                .FirstOrDefaultAsync(m => m.OrderId == id);
+                .FirstOrDefaultAsync(m => m.OrderDetailsId == id);
             if (orderDetail == null)
             {
                 return NotFound();
@@ -161,7 +167,7 @@ namespace StoreFront.Controllers
 
         private bool OrderDetailExists(int id)
         {
-          return (_context.OrderDetails?.Any(e => e.OrderId == id)).GetValueOrDefault();
+          return (_context.OrderDetails?.Any(e => e.OrderDetailsId == id)).GetValueOrDefault();
         }
     }
 }

@@ -176,12 +176,6 @@ namespace DATA.Models
                     .HasColumnName("zip")
                     .IsFixedLength();
 
-                entity.HasOne(d => d.OrderNavigation)
-                    .WithOne(p => p.Order)
-                    .HasForeignKey<Order>(d => d.OrderId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Orders_OrderDetails");
-
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.UserId)
@@ -191,12 +185,15 @@ namespace DATA.Models
 
             modelBuilder.Entity<OrderDetail>(entity =>
             {
-                entity.HasKey(e => e.OrderId)
-                    .HasName("PK_ProductsonOrder");
-
-                entity.Property(e => e.OrderId).ValueGeneratedNever();
+                entity.HasKey(e => e.OrderDetailsId);
 
                 entity.Property(e => e.Pprice).HasColumnType("money");
+
+                entity.HasOne(d => d.Order)
+                    .WithMany(p => p.OrderDetails)
+                    .HasForeignKey(d => d.OrderId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_OrderDetails_Orders");
 
                 entity.HasOne(d => d.Product)
                     .WithMany(p => p.OrderDetails)
