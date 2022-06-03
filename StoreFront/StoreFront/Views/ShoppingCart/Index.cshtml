@@ -89,7 +89,7 @@
                                 @item.Value.Product.Pname
                             </td>
                             <td>
-                                @item.Value.Product.Pprice
+                                @string.Format($"{item.Value.Product.Pprice:c}")
                             </td>
                             <td>
                                 @{
@@ -100,8 +100,8 @@
                                     decimal? lineTotal = item.Value.Qty * item.Value.Product.Pprice;
                                     cartTotal += lineTotal;
                                 }
-
-                                @lineTotal
+                                 @string.Format($"{lineTotal:c}")
+                              
 
                             </td>
                             <td>
@@ -118,7 +118,7 @@
 
             <div class= "alert alert-success text-center">
            <p>
-               Your total before tax and shipping is @cartTotal.
+                Your total before taxes and shipping is @string.Format($"{cartTotal:c}").
            </p>
                 @if (User.Identity.IsAuthenticated)
                 {
