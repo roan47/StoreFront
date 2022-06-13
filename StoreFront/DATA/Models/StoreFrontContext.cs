@@ -144,8 +144,6 @@ namespace DATA.Models
 
             modelBuilder.Entity<Order>(entity =>
             {
-                entity.Property(e => e.OrderId).ValueGeneratedNever();
-
                 entity.Property(e => e.Address)
                     .HasMaxLength(50)
                     .IsUnicode(false);

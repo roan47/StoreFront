@@ -20,7 +20,7 @@ namespace DATA.Models
         public int SupplierId { get; set; }
         public string? Img { get; set; }
 
-        public virtual Category? Category { get; set; } 
+        public virtual Category? Category { get; set; }
         public virtual Supplier? Supplier { get; set; }
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
     }
